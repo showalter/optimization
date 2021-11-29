@@ -1,35 +1,81 @@
 import java.util.function.DoubleUnaryOperator;
 
-public class BisectingSearchMethod implements OptimizationMethodWithDerivatives
+/**
+ * The BisectingSearchMethod class is an implementation of the Bisecting Search Method
+ * for optimizing a single variable function using the derivative of a function.
+ * <p>
+ * This work complies with the JMU Honor Code.
+ *
+ * @author Ryan Showalter
+ * @version 1
+ */
+public class BisectingSearchMethod implements OptimizationMethod
 {
+  private final double l;
 
-  @Override public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime, DoubleUnaryOperator fDoublePrime, double a1,
-      double b1)
+  /**
+   * Create a BisectingSearchMethod object that will minimize functions to the given interval of
+   * uncertainly l.
+   *
+   * @param l The desired final interval of uncertainty
+   */
+  public BisectingSearchMethod(double l)
+  {
+    this.l = l;
+  }
+
+  /**
+   * Minimize f using the bisecting search method.
+   *
+   * @param f            the function to minimize
+   * @param fPrime       the first derivative of the function to minimize
+   * @param fDoublePrime the second derivative of the function to minimize (unused)
+   * @param a1           the lower bound of the interval to minimize over
+   * @param b1           the upper bound of the interval to minimize over
+   * @return the midpoint of the final interval of uncertainty
+   */
+  @Override public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
+      DoubleUnaryOperator fDoublePrime, double a1, double b1)
   {
 
-    double l = 0.2;
+    if (f == null)
+    {
+      throw new IllegalArgumentException("f cannot be null");
+    }
+
+    if (fPrime == null)
+    {
+      throw new IllegalArgumentException("fPrime cannot be null");
+    }
+
     int n = 0;
     double halfToTheNth = 1;
 
     double a = a1;
     double b = b1;
 
-    while (halfToTheNth > l / (b - a)) {
+    // Find the needed number of iterations to get the given final interval of uncertainty
+    while (halfToTheNth > l / (b - a))
+    {
       n++;
       halfToTheNth *= 0.5;
     }
 
-
-
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
       double lambda = (a + b) / 2;
       double fPrimeAtLambda = fPrime.applyAsDouble(lambda);
 
-      if (fPrimeAtLambda == 0) {
+      if (fPrimeAtLambda == 0)
+      {
         return lambda;
-      } else if (fPrimeAtLambda > 0) {
+      }
+      else if (fPrimeAtLambda > 0)
+      {
         b = lambda;
-      } else {
+      }
+      else
+      {
         a = lambda;
       }
     }
