@@ -11,32 +11,20 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class NewtonsMethod extends AbstractOptimizationMethod
 {
-  private double start;
-  private double delta;
+  private final double start;
+  private final double delta;
 
   /**
    * Create a NewtonsMethod object with the given starting point and the maximum distance between
    * two observation points to determine convergence.
    *
-   * @param start
-   * @param delta
+   * @param start where to start minimization
+   * @param delta the maximum difference between two subsequent tests points to determine convergence
    */
   public NewtonsMethod(double start, double delta)
   {
     this.start = start;
     this.delta = delta;
-  }
-
-  /**
-   * This is a helper method for determining if an input gives a local minumum.
-   *
-   * @param lambda the input value
-   * @param fPrime the first derivative of the function being minimized
-   * @return true if the input gives a local minimum; false otherwise
-   */
-  private boolean isLocalMin(double lambda, DoubleUnaryOperator fPrime)
-  {
-    return Math.abs(fPrime.applyAsDouble(lambda)) == 0;
   }
 
   /**
@@ -52,25 +40,29 @@ public class NewtonsMethod extends AbstractOptimizationMethod
   @Override public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
       DoubleUnaryOperator fDoublePrime, double a1, double b1)
   {
-
     double lambda = start;
     double lastLambda = 0;
-    double beforeLastLambda = 0;
+    double beforeLastLambda;
     double stop = 100; // Stop if this number of iterations is reached.
 
-    if (isLocalMin(lambda, fPrime))
-    {
-      return lambda;
-    }
+    notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
 
     for (int i = 0; i < stop; i++)
     {
+      notifyObservers(EventType.ITERATION, i, "iteration: ");
+
       beforeLastLambda = lastLambda;
       lastLambda = lambda;
 
-      lambda = lambda - (fPrime.applyAsDouble(lambda) / fDoublePrime.applyAsDouble(lambda));
+      double fPrimeOfLambda = fPrime.applyAsDouble(lambda);
+      double fDoublePrimeOfLambda = fDoublePrime.applyAsDouble(lambda);
+      notifyObservers(EventType.EVALUATION, fPrimeOfLambda, "fPrime(lambda): ");
+      notifyObservers(EventType.EVALUATION, fDoublePrimeOfLambda, "fDoublePrime(lambda): ");
 
-      if (Math.abs(lambda - lastLambda) < delta || isLocalMin(lambda, fPrime))
+      lambda = lambda - (fPrime.applyAsDouble(lambda) / fDoublePrime.applyAsDouble(lambda));
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+
+      if (Math.abs(lambda - lastLambda) < delta || fPrimeOfLambda == 0)
       {
         return lambda;
       }

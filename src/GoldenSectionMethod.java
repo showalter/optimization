@@ -41,6 +41,9 @@ public class GoldenSectionMethod extends AbstractOptimizationMethod
     double a = a1;
     double b = b1;
 
+    notifyObservers(EventType.BOUNDS, a, "a: ");
+    notifyObservers(EventType.BOUNDS, b, "b: ");
+
     double alpha = 0.618;
 
     while (b - a > l)
@@ -48,7 +51,16 @@ public class GoldenSectionMethod extends AbstractOptimizationMethod
       double lambda = a + (1 - alpha) * (b - a);
       double mu = a + alpha * (b - a);
 
-      if (f.applyAsDouble(lambda) > f.applyAsDouble(mu))
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+      notifyObservers(EventType.TEST_POINT, mu, "mu: ");
+
+      double fOfLambda = f.applyAsDouble(lambda);
+      double fOfMu = f.applyAsDouble(mu);
+
+      notifyObservers(EventType.EVALUATION, fOfLambda, "f(lambda): ");
+      notifyObservers(EventType.EVALUATION, fOfMu, "f(mu): ");
+
+      if (fOfLambda > fOfMu)
       {
         a = lambda;
         lambda = mu;
@@ -60,6 +72,11 @@ public class GoldenSectionMethod extends AbstractOptimizationMethod
         mu = lambda;
         lambda = a + (1 - alpha) * (b - a);
       }
+
+      notifyObservers(EventType.BOUNDS, a, "a: ");
+      notifyObservers(EventType.BOUNDS, b, "b: ");
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+      notifyObservers(EventType.TEST_POINT, mu, "mu: ");
     }
 
     return (a + b) / 2;

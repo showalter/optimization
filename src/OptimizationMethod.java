@@ -26,10 +26,27 @@ public interface OptimizationMethod
   public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
       DoubleUnaryOperator fDoublePrime, double a1, double b1);
 
+  /**
+   * Add an observer to this OptimizationMethod's collection of observers.
+   *
+   * @param observer the observer to add
+   */
   public void addOptimizationObserver(OptimizationObserver observer);
 
+  /**
+   * Notify all observers of some event.
+   *
+   * @param type the type of event that has occurred.
+   * @param value the value associated with the event
+   * @param text a description of the value
+   */
   public void notifyObservers(EventType type, double value, String text);
 
+  /**
+   * Remove an observer to this OptimizationMethod's collection of observers.
+   *
+   * @param observer the observer to remove
+   */
   public void removeOptimizationObserver(OptimizationObserver observer);
 
 
