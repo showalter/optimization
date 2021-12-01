@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class FibonacciMethod implements OptimizationMethod
+public class FibonacciMethod extends AbstractOptimizationMethod
 {
 
   // An array of the Fibonacci sequence up until the numbers can't fit into a long.
@@ -60,6 +60,8 @@ public class FibonacciMethod implements OptimizationMethod
 
     double a = a1;
     double b = b1;
+    notifyObservers(EventType.BOUNDS, a, "starting a: ");
+    notifyObservers(EventType.BOUNDS, b, "starting b: ");
 
     int n;
 
@@ -67,12 +69,25 @@ public class FibonacciMethod implements OptimizationMethod
     for (n = 0; n < fib.length && fib[n] <= (b - a) / l; n++)
       ;
 
+    notifyObservers(EventType.OTHER, n, "number of iterations: ");
+
     double lambda = a + ((double) fib[n - 2] / fib[n]) * (b - a);
     double mu = a + ((double) fib[n - 1] / fib[n]) * (b - a);
 
+    notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+    notifyObservers(EventType.TEST_POINT, mu, "mu: ");
+
     for (int i = 1; i < n; i++)
     {
-      if (f.applyAsDouble(lambda) > f.applyAsDouble(mu))
+      notifyObservers(EventType.ITERATION, i, "iteration: ");
+
+      double fOfLambda = f.applyAsDouble(lambda);
+      double fOfMu = f.applyAsDouble(mu);
+
+      notifyObservers(EventType.EVALUATION, fOfLambda, "f(lambda): ");
+      notifyObservers(EventType.EVALUATION, fOfMu, "f(mu): ");
+
+      if (fOfLambda > fOfMu)
       {
         a = lambda;
         lambda = mu;
@@ -85,10 +100,24 @@ public class FibonacciMethod implements OptimizationMethod
         lambda = a + ((double) fib[n - i - 2] / fib[n - i]) * (b - a);
       }
 
+      notifyObservers(EventType.BOUNDS, a, "a: ");
+      notifyObservers(EventType.BOUNDS, b, "b: ");
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+      notifyObservers(EventType.TEST_POINT, mu, "mu: ");
+
       if (i == n - 2)
       {
         mu = lambda + e;
-        if (f.applyAsDouble(lambda) > f.applyAsDouble(mu))
+
+        notifyObservers(EventType.TEST_POINT, mu, "final mu: ");
+
+        fOfLambda = f.applyAsDouble(lambda);
+        fOfMu = f.applyAsDouble(mu);
+
+        notifyObservers(EventType.EVALUATION, fOfLambda, "final f(lambda): ");
+        notifyObservers(EventType.EVALUATION, fOfMu, "final f(mu): ");
+
+        if (fOfLambda > fOfMu)
         {
           a = lambda;
         }
@@ -96,6 +125,9 @@ public class FibonacciMethod implements OptimizationMethod
         {
           b = lambda;
         }
+
+        notifyObservers(EventType.BOUNDS, a, "final a: ");
+        notifyObservers(EventType.BOUNDS, b, "final b: ");
 
         return (a + b) / 2;
       }

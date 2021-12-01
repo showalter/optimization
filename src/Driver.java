@@ -16,6 +16,8 @@ public class Driver
    */
   public static void main(String[] args)
   {
+    OptimizationObserver o = new PrintingOptimizationObserver();
+
     OptimizationMethod d = new DichotomousSearchMethod(0.2, 0.01);
 
     System.out.println("DichotomousSearch: " + d.minimize((x) -> x * x + 2 * x, null, null, -3, 5));
@@ -33,9 +35,11 @@ public class Driver
     System.out.println(f.minimize((x) -> x * x + 2 * x, null, null, -3, 5));
 
     OptimizationMethod b = new BisectingSearchMethod(0.2);
+    b.addOptimizationObserver(o);
 
-    System.out.println(
-        "Bisecting Search: " + b.minimize((x) -> x * x + 2, (x) -> 2 * x + 2, null, -3, 6));
+    System.out.println("Bisecting search");
+
+    System.out.println(b.minimize((x) -> x * x + 2, (x) -> 2 * x + 2, null, -3, 6));
 
     OptimizationMethod n = new NewtonsMethod(0.4, 0.005);
 

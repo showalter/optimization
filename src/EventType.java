@@ -1,0 +1,4 @@
+public enum EventType
+{
+  BOUNDS, ITERATION, TEST_POINT, EVALUATION, OTHER
+}

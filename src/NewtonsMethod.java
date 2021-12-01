@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class NewtonsMethod implements OptimizationMethod
+public class NewtonsMethod extends AbstractOptimizationMethod
 {
   private double start;
   private double delta;

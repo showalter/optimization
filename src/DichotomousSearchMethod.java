@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class DichotomousSearchMethod implements OptimizationMethod
+public class DichotomousSearchMethod extends AbstractOptimizationMethod
 {
 
   public final double l;
@@ -44,19 +44,32 @@ public class DichotomousSearchMethod implements OptimizationMethod
 
     double a = a1;
     double b = b1;
+    notifyObservers(EventType.BOUNDS, a, "starting a: ");
+    notifyObservers(EventType.BOUNDS, b, "starting b: ");
 
     while (b - a > l)
     {
       double lambda = (a + b) / 2 - e;
       double mu = (a + b) / 2 + e;
 
-      if (f.applyAsDouble(lambda) < f.applyAsDouble(mu))
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+      notifyObservers(EventType.TEST_POINT, mu, "mu: ");
+
+      double fOfLambda = f.applyAsDouble(lambda);
+      double fOfMu = f.applyAsDouble(mu);
+
+      notifyObservers(EventType.EVALUATION, fOfLambda, "f(lambda): ");
+      notifyObservers(EventType.EVALUATION, fOfMu, "f(mu): ");
+
+      if (fOfLambda < fOfMu)
       {
         b = mu;
+        notifyObservers(EventType.BOUNDS, b, "new b: ");
       }
       else
       {
         a = lambda;
+        notifyObservers(EventType.BOUNDS, a, "new a: ");
       }
     }
 

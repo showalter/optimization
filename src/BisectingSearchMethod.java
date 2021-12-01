@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class BisectingSearchMethod implements OptimizationMethod
+public class BisectingSearchMethod extends AbstractOptimizationMethod
 {
   private final double l;
 
@@ -54,6 +54,9 @@ public class BisectingSearchMethod implements OptimizationMethod
     double a = a1;
     double b = b1;
 
+    notifyObservers(EventType.BOUNDS, a, "starting a: ");
+    notifyObservers(EventType.BOUNDS, b, "starting b: ");
+
     // Find the needed number of iterations to get the given final interval of uncertainty
     while (halfToTheNth > l / (b - a))
     {
@@ -61,10 +64,15 @@ public class BisectingSearchMethod implements OptimizationMethod
       halfToTheNth *= 0.5;
     }
 
+    notifyObservers(EventType.OTHER, n, "number of iterations: ");
+
     for (int i = 0; i < n; i++)
     {
       double lambda = (a + b) / 2;
       double fPrimeAtLambda = fPrime.applyAsDouble(lambda);
+
+      notifyObservers(EventType.TEST_POINT, lambda, "lambda: ");
+      notifyObservers(EventType.EVALUATION, fPrimeAtLambda, "fPrimeAtLambda: ");
 
       if (fPrimeAtLambda == 0)
       {
@@ -73,10 +81,12 @@ public class BisectingSearchMethod implements OptimizationMethod
       else if (fPrimeAtLambda > 0)
       {
         b = lambda;
+        notifyObservers(EventType.BOUNDS, b, "new b: ");
       }
       else
       {
         a = lambda;
+        notifyObservers(EventType.BOUNDS, a, "new a: ");
       }
     }
 

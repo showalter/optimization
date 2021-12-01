@@ -25,4 +25,12 @@ public interface OptimizationMethod
    */
   public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
       DoubleUnaryOperator fDoublePrime, double a1, double b1);
+
+  public void addOptimizationObserver(OptimizationObserver observer);
+
+  public void notifyObservers(EventType type, double value, String text);
+
+  public void removeOptimizationObserver(OptimizationObserver observer);
+
+
 }
