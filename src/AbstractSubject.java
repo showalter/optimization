@@ -1,13 +1,18 @@
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.function.DoubleUnaryOperator;
 
-public abstract class AbstractOptimizationMethod implements OptimizationMethod
+/**
+ * The AbstractSubject class provides a base implementation of methods required for a class to be
+ * a Subject for the Observer pattern.
+ * <p>
+ * This work complies with the JMU Honor Code.
+ *
+ * @author Ryan Showalter
+ * @version 1
+ */
+public class AbstractSubject implements Subject
 {
   private final Collection<OptimizationObserver> observers = new HashSet<>();
-
-  public abstract double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
-      DoubleUnaryOperator fDoublePrime, double a1, double b1);
 
   @Override public void addOptimizationObserver(OptimizationObserver observer)
   {

@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class DichotomousSearchMethod extends AbstractOptimizationMethod
+public class DichotomousSearchMethod extends AbstractSubject implements OptimizationMethod
 {
 
   public final double l;

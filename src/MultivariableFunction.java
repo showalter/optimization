@@ -14,7 +14,20 @@ public interface MultivariableFunction
    * @param v the Vector to use as input to the function
    * @return the function's value with the given input
    */
-  public double f(Vector v);
+  double f(Vector v);
+
+  /**
+   * Evaluate the partial derivative of this function with respect to some variable.
+   * <p>
+   * For example, to take the partial derivative of f with respect to x_0, pass 0 as the argument
+   * for varWithRespectTo
+   *
+   * @param v                the Vector where the partial derivative is being evaluated at
+   * @param varWithRespectTo the variable that the partial derivative is taken with respect to
+   * @return the value of the partial derivative with respect to the given variable at the given
+   * input Vector
+   */
+  double partialDerivative(Vector v, int varWithRespectTo);
 
   /**
    * Get the degree of this function.
@@ -24,5 +37,5 @@ public interface MultivariableFunction
    *
    * @return the degree of this function.
    */
-  public int degree();
+  int degree();
 }

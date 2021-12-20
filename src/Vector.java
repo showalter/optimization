@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class Vector
 {
 
-  private double[] components;
+  private final double[] components;
 
   /**
    * Create a vector with the given components.
@@ -23,6 +23,25 @@ public class Vector
   public Vector(double[] components)
   {
     this.components = components.clone();
+  }
+
+  /**
+   * Get the component at index.
+   *
+   * @param index the index in the components array
+   * @return the value in the components array at index
+   */
+  public double getComponent(int index)
+  {
+    return components[index];
+  }
+
+  public Vector replace(int index, double value)
+  {
+    double[] newComponents = this.toArray();
+
+    newComponents[index] = value;
+    return new Vector(newComponents);
   }
 
   /**
@@ -53,6 +72,16 @@ public class Vector
   }
 
   /**
+   * Get the number of components in this Vector.
+   *
+   * @return the number of components in this Vector
+   */
+  public int length()
+  {
+    return this.components.length;
+  }
+
+  /**
    * Get the result of adding another Vector to this Vector.
    *
    * @param addend the Vector to add to this one
@@ -74,6 +103,59 @@ public class Vector
     }
 
     return new Vector(resultComponents);
+  }
+
+  /**
+   * Get the dot product of this Vector and another Vector.
+   *
+   * @param other the Vector to dot this one with
+   * @return the dot product
+   */
+  public double dot(Vector other)
+  {
+    if (other.length() != this.length())
+    {
+      throw new IllegalArgumentException("other must have the same number of components");
+    }
+
+    double sum = 0;
+
+    for (int i = 0; i < this.length(); i++)
+    {
+      sum += this.components[i] * other.components[i];
+    }
+
+    return sum;
+  }
+
+  /**
+   * Get the magnitude or norm of this Vector.
+   *
+   * @return the magnitude or norm of this Vector
+   */
+  public double magnitude()
+  {
+    double sum = Arrays.stream(components).map(component -> component * component).sum();
+
+    return Math.sqrt(sum);
+  }
+
+  /**
+   * Normalize this Vector.
+   *
+   * @return a normalized version of this Vector
+   */
+  public Vector normalize()
+  {
+    double[] newComponents = new double[components.length];
+    double norm = this.magnitude();
+
+    for (int i = 0; i < components.length; i++)
+    {
+      newComponents[i] = components[i] / norm;
+    }
+
+    return new Vector(newComponents);
   }
 
   /**
@@ -104,5 +186,62 @@ public class Vector
   @Override public int hashCode()
   {
     return Arrays.hashCode(components);
+  }
+
+  /**
+   * Get a coordinate vector of the given size with a 1 at componentIndex.
+   *
+   * @param componentIndex the index of the Vector that will have a 1
+   * @param size the number of components in the output Vector
+   * @return the desired coordinate vector
+   */
+  public static Vector getCoordinateVector(int componentIndex, int size)
+  {
+    double[] components = new double[size];
+
+    components[componentIndex] = 1;
+
+    return new Vector(components);
+  }
+
+  /**
+   * Get all the coordinate Vectors with the given number of components.
+   *
+   * @param size the number of components in each Vector
+   * @return all coordinate Vectors with the given size
+   */
+  public static Vector[] getCoordinateDirections(int size)
+  {
+    Vector[] result = new Vector[size];
+
+    for (int i = 0; i < size; i++)
+    {
+      result[i] = getCoordinateVector(i, size);
+    }
+
+    return result;
+  }
+
+  /**
+   * Get the Cartesian distance between a and b.
+   *
+   * @param a Vector a
+   * @param b Vector b
+   * @return the distance between a and b
+   */
+  public static double distance(Vector a, Vector b)
+  {
+    if (a.length() != b.length())
+    {
+      throw new IllegalArgumentException("Mismatched vector lengths");
+    }
+
+    double sum = 0;
+    for (int i = 0; i < a.length(); i++)
+    {
+      sum += Math.pow(a.getComponent(i) - b.getComponent(i), 2);
+    }
+
+    return Math.sqrt(sum);
   }
 }

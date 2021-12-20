@@ -9,10 +9,10 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class NewtonsMethod extends AbstractOptimizationMethod
+public class NewtonsMethod extends AbstractSubject implements OptimizationMethod
 {
-  private double start;
-  private double delta;
+  private final double start;
+  private final double delta;
 
   /**
    * Create a NewtonsMethod object with the given starting point and the maximum distance between

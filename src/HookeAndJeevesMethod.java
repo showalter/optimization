@@ -1,15 +1,15 @@
 import java.util.function.DoubleUnaryOperator;
 
 /**
- * The CyclicCoordinateMethod class provides an implementation of the Cyclic Coordinate Method
- * of optimizing a multivariable function.
+ * The HookeAndJeevesMethod class provides an implementation of the line search version of the method
+ * of Hooke and Jeeves for optimizing a multivariable function.
  * <p>
  * This work complies with the JMU Honor Code.
  *
  * @author Ryan Showalter
  * @version 1
  */
-public class CyclicCoordinateMethod extends AbstractSubject
+public class HookeAndJeevesMethod extends AbstractSubject
     implements MultidimensionalOptimizationMethod
 {
 
@@ -18,7 +18,7 @@ public class CyclicCoordinateMethod extends AbstractSubject
   private final OptimizationMethod oneDimensionMethod;
 
   /**
-   * Create a CyclicCoordinateMethod object with the given starting point, termination scalar e, and
+   * Create a HookeAndJeevesMethod object with the given starting point, termination scalar e, and
    * single variable optimization method.
    *
    * @param start              the point to start the search
@@ -26,7 +26,7 @@ public class CyclicCoordinateMethod extends AbstractSubject
    * @param oneDimensionMethod an OptimizationMethod object for optimizing functions of a single
    *                           variable
    */
-  public CyclicCoordinateMethod(Vector start, double e, OptimizationMethod oneDimensionMethod)
+  public HookeAndJeevesMethod(Vector start, double e, OptimizationMethod oneDimensionMethod)
   {
     this.start = start;
     this.e = e;
@@ -38,13 +38,12 @@ public class CyclicCoordinateMethod extends AbstractSubject
     Vector[] coordinateVectors = Vector.getCoordinateDirections(f.degree());
 
     Vector x = start;
-    Vector lastX;
+    Vector lastX = x;
     int iteration = 1;
 
-    do
+    while (true)
     {
       notifyObservers(EventType.ITERATION, iteration, "iteration k: ");
-      lastX = x;
 
       for (int i = 0; i < f.degree(); i++)
       {
@@ -74,11 +73,38 @@ public class CyclicCoordinateMethod extends AbstractSubject
       notifyObservers(EventType.OTHER, Vector.distance(x, lastX),
           "Distance between x and last x: ");
 
+      double dist = Vector.distance(x, lastX);
+      notifyObservers(EventType.OTHER, dist, "Distance between x and last x: ");
+
+      // Exit condition
+      if (dist < e)
+      {
+        return x;
+      }
+
+      Vector patternDirection = x.add(lastX.scale(-1));
+
+      Vector finalX1 = x;
+      double optimalLambda = oneDimensionMethod.minimize(
+          d -> f.f(finalX1.add(patternDirection.scale(d))), null, null, -5, 5);
+
+      for (int i = 0; i < f.degree(); i++)
+      {
+        notifyObservers(EventType.OTHER, patternDirection.getComponent(i),
+            "component " + i + " of pattern direction: ");
+      }
+
+      notifyObservers(EventType.OTHER, optimalLambda, "optimal lambda for pattern direction: ");
+
+      lastX = x;
+      x = x.add(patternDirection.scale(optimalLambda));
+
+      for (int i = 0; i < f.degree(); i++)
+      {
+        notifyObservers(EventType.OTHER, x.getComponent(i), "component " + i + " of x: ");
+      }
+
       iteration++;
     }
-    while (Vector.distance(x, lastX) > e);
-
-    return x;
   }
-
 }

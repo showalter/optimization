@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class GoldenSectionMethod extends AbstractOptimizationMethod
+public class GoldenSectionMethod extends AbstractSubject implements OptimizationMethod
 {
   private final double l;
 

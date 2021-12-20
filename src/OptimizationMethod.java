@@ -10,7 +10,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public interface OptimizationMethod
+public interface OptimizationMethod extends Subject
 {
   /**
    * Minimize function f, possibly using fPrime and fDoublePrime, which are the first and second
@@ -23,14 +23,7 @@ public interface OptimizationMethod
    * @param b1           the upper bound of the interval to minimize over
    * @return the midpoint of the final interval of uncertainty
    */
-  public double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
+  double minimize(DoubleUnaryOperator f, DoubleUnaryOperator fPrime,
       DoubleUnaryOperator fDoublePrime, double a1, double b1);
-
-  public void addOptimizationObserver(OptimizationObserver observer);
-
-  public void notifyObservers(EventType type, double value, String text);
-
-  public void removeOptimizationObserver(OptimizationObserver observer);
-
 
 }

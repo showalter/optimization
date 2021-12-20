@@ -9,7 +9,7 @@ import java.util.function.DoubleUnaryOperator;
  * @author Ryan Showalter
  * @version 1
  */
-public class BisectingSearchMethod extends AbstractOptimizationMethod
+public class BisectingSearchMethod extends AbstractSubject implements OptimizationMethod
 {
   private final double l;
 

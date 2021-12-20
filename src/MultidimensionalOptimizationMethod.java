@@ -1,5 +1,3 @@
-import java.util.function.Function;
-
 /**
  * The MultidimensionalOptimizationMethod interface defines the operations an optimization method
  * can perform.
@@ -11,7 +9,7 @@ import java.util.function.Function;
  * @author Ryan Showalter
  * @version 1
  */
-public interface MultidimensionalOptimizationMethod
+public interface MultidimensionalOptimizationMethod extends Subject
 {
 
   /**
@@ -20,5 +18,6 @@ public interface MultidimensionalOptimizationMethod
    * @param f the function to minimize
    * @return the Vector that minimizes f
    */
-  public Vector minimize(MultivariableFunction f);
+  Vector minimize(MultivariableFunction f);
+
 }
