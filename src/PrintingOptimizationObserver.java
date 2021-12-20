@@ -1,7 +1,7 @@
 /**
  * The PrintingOptimizationObserver class is an OptimizationObserver that prints all the
- * information for all the events it received.
- *
+ * information for all the events it receives.
+ * <p>
  * This work complies with the JMU Honor Code.
  *
  * @author Ryan Showalter

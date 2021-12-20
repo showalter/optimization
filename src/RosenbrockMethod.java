@@ -4,7 +4,6 @@
  * <p>
  * This work complies with the JMU Honor Code.
  *
- *
  * @author Ryan Showalter
  * @version 1
  */
@@ -17,12 +16,14 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
   /**
    * Create a RosenbrockMethod object with the given starting point, termination scalar e, and
    * single variable optimization method.
-   * @param start the point to start the search
-   * @param e the termination scalar
+   *
+   * @param start              the point to start the search
+   * @param e                  the termination scalar
    * @param oneDimensionMethod an OptimizationMethod object for optimizing functions of a single
    *                           variable
    */
-  public RosenbrockMethod(Vector start, double e, OptimizationMethod oneDimensionMethod) {
+  public RosenbrockMethod(Vector start, double e, OptimizationMethod oneDimensionMethod)
+  {
     this.start = start;
     this.e = e;
     this.oneDimensionMethod = oneDimensionMethod;
@@ -31,24 +32,30 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
   /**
    * Get new search directions based on old search directions and the amount traveled in those
    * directions.
-   *
+   * <p>
    * This method uses the Gram-Schmidt process to get orthogonal vectors.
    *
    * @param oldDirections the old search directions
-   * @param lambdas the amount traveled in the corresponding search direction - lambdas[i] is the
-   *                distance traveled in the direction of oldDirections[i]
+   * @param lambdas       the amount traveled in the corresponding search direction - lambdas[i] is the
+   *                      distance traveled in the direction of oldDirections[i]
    * @return the new search directions
    */
-  public static Vector[] getSearchDirections(Vector[] oldDirections, double[] lambdas) {
+  public static Vector[] getSearchDirections(Vector[] oldDirections, double[] lambdas)
+  {
     int n = lambdas.length;
 
     Vector[] as = new Vector[n];
-    for (int i = 0; i < n; i++) {
-      if (lambdas[i] == 0) {
+    for (int i = 0; i < n; i++)
+    {
+      if (lambdas[i] == 0)
+      {
         as[i] = oldDirections[i];
-      } else {
+      }
+      else
+      {
         Vector ai = new Vector(new double[n]);
-        for (int j = i; j < n; j++) {
+        for (int j = i; j < n; j++)
+        {
           ai = ai.add(oldDirections[j].scale(lambdas[j]));
         }
         as[i] = ai;
@@ -56,11 +63,13 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
     }
 
     Vector[] newDirections = new Vector[n];
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
       Vector b = as[i];
 
       Vector sum = new Vector(new double[n]);
-      for (int j = 0; j < i; j++) {
+      for (int j = 0; j < i; j++)
+      {
         sum = sum.add(newDirections[j].scale(as[i].dot(newDirections[j])));
       }
 
@@ -81,7 +90,8 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
     Vector y = x;
     int iteration = 1;
 
-    while (true) {
+    while (true)
+    {
       double[] lambdas = new double[n];
 
       notifyObservers(EventType.ITERATION, iteration, "iteration: ");
@@ -91,7 +101,8 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
         notifyObservers(EventType.TEST_POINT, x.getComponent(i), "component " + i + " of x: ");
       }
 
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++)
+      {
         notifyObservers(EventType.ITERATION, i, "i: ");
 
         Vector direction = directions[i];
@@ -106,7 +117,8 @@ public class RosenbrockMethod extends AbstractSubject implements Multidimensiona
         // of the lambda
         Vector finalY = y;
 
-        lambdas[i] = oneDimensionMethod.minimize(d -> f.f(finalY.add(direction.scale(d))), null, null, -5, 5);
+        lambdas[i] = oneDimensionMethod.minimize(d -> f.f(finalY.add(direction.scale(d))), null,
+            null, -5, 5);
 
         notifyObservers(EventType.OTHER, lambdas[i], "lambdas[" + i + "]: ");
 

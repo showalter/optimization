@@ -4,11 +4,11 @@
  * <p>
  * This work complies with the JMU Honor Code.
  *
- *
  * @author Ryan Showalter
  * @version 1
  */
-public class SteepestDescentMethod extends AbstractSubject implements MultidimensionalOptimizationMethod
+public class SteepestDescentMethod extends AbstractSubject
+    implements MultidimensionalOptimizationMethod
 {
   private final Vector start;
   private final double e;
@@ -17,12 +17,14 @@ public class SteepestDescentMethod extends AbstractSubject implements Multidimen
   /**
    * Create a SteepestDescentMethod object with the given starting point, termination scalar e, and
    * single variable optimization method.
-   * @param start the point to start the search
-   * @param e the termination scalar
+   *
+   * @param start              the point to start the search
+   * @param e                  the termination scalar
    * @param oneDimensionMethod an OptimizationMethod object for optimizing functions of a single
    *                           variable
    */
-  public SteepestDescentMethod(Vector start, double e, OptimizationMethod oneDimensionMethod) {
+  public SteepestDescentMethod(Vector start, double e, OptimizationMethod oneDimensionMethod)
+  {
     this.start = start;
     this.e = e;
     this.oneDimensionMethod = oneDimensionMethod;
@@ -34,7 +36,8 @@ public class SteepestDescentMethod extends AbstractSubject implements Multidimen
     Vector x = start;
     int iteration = 1;
 
-    while (true) {
+    while (true)
+    {
       notifyObservers(EventType.ITERATION, iteration, "iteration: ");
 
       for (int i = 0; i < n; i++)
@@ -44,7 +47,8 @@ public class SteepestDescentMethod extends AbstractSubject implements Multidimen
 
       // Construct the gradient vector
       double[] componentsOfGradient = new double[n];
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; i++)
+      {
         componentsOfGradient[i] = f.partialDerivative(x, i);
 
         notifyObservers(EventType.EVALUATION, componentsOfGradient[i], "df/dx_" + i + ": ");
@@ -65,7 +69,8 @@ public class SteepestDescentMethod extends AbstractSubject implements Multidimen
       Vector finalX = x;
 
       // Find the amount to move in the direction that is steepest
-      double optimalLambda = oneDimensionMethod.minimize(d -> f.f(finalX.add(gradientAtX.scale(d))), null, null, -5, 5);
+      double optimalLambda = oneDimensionMethod.minimize(d -> f.f(finalX.add(gradientAtX.scale(d))),
+          null, null, -5, 5);
       notifyObservers(EventType.OTHER, optimalLambda, "Optimal lambda: ");
 
       x = x.add(gradientAtX.scale(optimalLambda));

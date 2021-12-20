@@ -192,7 +192,7 @@ public class Vector
    * Get a coordinate vector of the given size with a 1 at componentIndex.
    *
    * @param componentIndex the index of the Vector that will have a 1
-   * @param size the number of components in the output Vector
+   * @param size           the number of components in the output Vector
    * @return the desired coordinate vector
    */
   public static Vector getCoordinateVector(int componentIndex, int size)
